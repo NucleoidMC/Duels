@@ -2,6 +2,8 @@ package io.github.redcreeper14385.duels.game;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import xyz.nucleoid.plasmid.game.GameCloseReason;
 import xyz.nucleoid.plasmid.game.GameSpace;
@@ -64,13 +66,14 @@ public class DuelsActive {
 
             game.setRule(GameRule.CRAFTING, RuleResult.DENY);
             game.setRule(GameRule.PORTALS, RuleResult.DENY);
-            game.setRule(GameRule.PVP, RuleResult.DENY);
             game.setRule(GameRule.HUNGER, RuleResult.DENY);
             game.setRule(GameRule.FALL_DAMAGE, RuleResult.DENY);
             game.setRule(GameRule.INTERACTION, RuleResult.DENY);
             game.setRule(GameRule.BLOCK_DROPS, RuleResult.DENY);
             game.setRule(GameRule.THROW_ITEMS, RuleResult.DENY);
             game.setRule(GameRule.UNSTABLE_TNT, RuleResult.DENY);
+
+            game.setRule(GameRule.PVP, RuleResult.ALLOW);
 
             game.on(GameOpenListener.EVENT, active::onOpen);
             game.on(GameCloseListener.EVENT, active::onClose);
@@ -123,6 +126,17 @@ public class DuelsActive {
     }
 
     private void spawnParticipant(ServerPlayerEntity player) {
+        player.inventory.clear();
+
+        for (ItemStack item : config.gear) {
+                player.inventory.insertStack(item);
+        }
+
+        player.equipStack(EquipmentSlot.HEAD, config.helmet);
+        player.equipStack(EquipmentSlot.CHEST, config.chestplate);
+        player.equipStack(EquipmentSlot.LEGS, config.leggings);
+        player.equipStack(EquipmentSlot.FEET, config.boots);
+
         this.spawnLogic.resetPlayer(player, GameMode.ADVENTURE);
         this.spawnLogic.spawnPlayer(player);
     }
