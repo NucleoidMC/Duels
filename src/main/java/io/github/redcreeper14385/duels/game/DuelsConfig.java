@@ -6,6 +6,7 @@ import io.github.redcreeper14385.duels.game.map.DuelsMapConfig;
 import net.minecraft.item.ItemStack;
 import xyz.nucleoid.plasmid.game.config.PlayerConfig;
 
+import java.util.Collections;
 import java.util.List;
 
 public class DuelsConfig {
@@ -13,11 +14,11 @@ public class DuelsConfig {
             PlayerConfig.CODEC.fieldOf("players").forGetter(config -> config.playerConfig),
             DuelsMapConfig.CODEC.fieldOf("map").forGetter(config -> config.mapConfig),
             Codec.INT.fieldOf("time_limit_secs").forGetter(config -> config.timeLimitSecs),
-            ItemStack.CODEC.listOf().fieldOf("gear").forGetter(config -> config.gear),
-            ItemStack.CODEC.fieldOf("helmet").forGetter(config -> config.helmet),
-            ItemStack.CODEC.fieldOf("chestplate").forGetter(config -> config.chestplate),
-            ItemStack.CODEC.fieldOf("leggings").forGetter(config -> config.leggings),
-            ItemStack.CODEC.fieldOf("boots").forGetter(config -> config.boots)
+            ItemStack.CODEC.listOf().optionalFieldOf("gear", Collections.emptyList()).forGetter(config -> config.gear),
+            ItemStack.CODEC.optionalFieldOf("helmet", ItemStack.EMPTY).forGetter(config -> config.helmet),
+            ItemStack.CODEC.optionalFieldOf("chestplate", ItemStack.EMPTY).forGetter(config -> config.chestplate),
+            ItemStack.CODEC.optionalFieldOf("leggings", ItemStack.EMPTY).forGetter(config -> config.leggings),
+            ItemStack.CODEC.optionalFieldOf("boots", ItemStack.EMPTY).forGetter(config -> config.boots)
     ).apply(instance, DuelsConfig::new));
 
     public final PlayerConfig playerConfig;
