@@ -13,6 +13,7 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
+import xyz.nucleoid.plasmid.util.PlayerRef;
 
 import java.util.Set;
 
@@ -32,7 +33,7 @@ public class DuelsStageManager {
         this.finishTime = this.startTime + (config.timeLimitSecs * 20);
     }
 
-    public IdleTickResult tick(long time, GameSpace space) {
+    public IdleTickResult tick(long time, GameSpace space, Object2ObjectMap<PlayerRef, DuelsPlayer> participants) {
         // Game has finished. Wait a few seconds before finally closing the game.
         if (this.closeTime > 0) {
             if (time >= this.closeTime) {
@@ -48,7 +49,7 @@ public class DuelsStageManager {
         }
 
         // Game has just finished. Transition to the waiting-before-close state.
-        if (time > this.finishTime || space.getPlayers().isEmpty()) {
+        if (time > this.finishTime || participants.size() <= 1) {
             if (!this.setSpectator) {
                 this.setSpectator = true;
                 for (ServerPlayerEntity player : space.getPlayers()) {
@@ -62,6 +63,7 @@ public class DuelsStageManager {
         }
 
         return IdleTickResult.CONTINUE_TICK;
+
     }
 
     private void tickStartWaiting(long time, GameSpace space) {

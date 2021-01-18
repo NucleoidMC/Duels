@@ -143,7 +143,7 @@ public class DuelsActive {
         ServerWorld world = this.gameSpace.getWorld();
         long time = world.getTime();
 
-        DuelsStageManager.IdleTickResult result = this.stageManager.tick(time, gameSpace);
+        DuelsStageManager.IdleTickResult result = this.stageManager.tick(time, gameSpace, participants);
 
         switch (result) {
             case CONTINUE_TICK:
