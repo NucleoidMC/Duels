@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "duels",
+  "version": "${version}",
+  "name": "Duels",
+  "description": "A duels PvP minigame for Minecraft.",
+  "authors": [
+    "redcreeper14385"
+  ],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "io.github.redcreeper14385.duels.Duels"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.9.1",
+    "fabric": "*",
+    "minecraft": "1.16.4",
+    "plasmid": "0.4.x"
+  }
+}
