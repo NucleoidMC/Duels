@@ -84,7 +84,6 @@ public class DuelsActive {
 
             game.on(GameTickListener.EVENT, active::tick);
 
-            game.on(PlayerDamageListener.EVENT, active::onPlayerDamage);
             game.on(PlayerDeathListener.EVENT, active::onPlayerDeath);
         });
     }
@@ -112,14 +111,8 @@ public class DuelsActive {
         this.participants.remove(PlayerRef.of(player));
     }
 
-    private ActionResult onPlayerDamage(ServerPlayerEntity player, DamageSource source, float amount) {
-        // TODO handle damage
-        this.spawnParticipant(player);
-        return ActionResult.FAIL;
-    }
 
     private ActionResult onPlayerDeath(ServerPlayerEntity player, DamageSource source) {
-
         this.spawnSpectator(player);
         this.removePlayer(player);
         return ActionResult.FAIL;
@@ -167,7 +160,6 @@ public class DuelsActive {
 
         this.timerBar.update(this.stageManager.finishTime - time, this.config.timeLimitSecs * 20);
 
-        // TODO tick logic
     }
 
     private void broadcastWin(WinResult result) {
