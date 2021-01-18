@@ -188,7 +188,7 @@ public class DuelsActive {
 
         if (participants.size() == 1) {
             for (PlayerRef player : participants.keySet()) {
-                if (player != null) {
+                if (player.getEntity(world) != null) {
                     return WinResult.win(player.getEntity(world));
                 }
                 else {
