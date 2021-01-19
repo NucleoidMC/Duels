@@ -122,7 +122,7 @@ public class DuelsActive {
         player.inventory.clear();
 
         for (ItemStack item : config.gear) {
-                player.inventory.insertStack(item);
+            player.inventory.insertStack(item.copy());
         }
 
         player.equipStack(EquipmentSlot.HEAD, config.helmet);
