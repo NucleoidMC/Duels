@@ -1,10 +1,7 @@
 {
   "type": "duels:duels",
   "map": {
-    "spawn_block": {
-      "Name": "minecraft:red_terracotta",
-      "Properties": {}
-    }
+    "id": "duels:nether"
   },
   "players": {
     "min": 1,

@@ -1,5 +1,6 @@
 package io.github.redcreeper14385.duels.game;
 
+import io.github.redcreeper14385.duels.game.map.DuelsMapBuilder;
 import net.minecraft.util.ActionResult;
 import xyz.nucleoid.plasmid.game.*;
 import xyz.nucleoid.plasmid.game.event.*;
@@ -7,7 +8,6 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.GameMode;
 import io.github.redcreeper14385.duels.game.map.DuelsMap;
-import io.github.redcreeper14385.duels.game.map.DuelsMapGenerator;
 import xyz.nucleoid.fantasy.BubbleWorldConfig;
 
 public class DuelsWaiting {
@@ -25,8 +25,7 @@ public class DuelsWaiting {
 
     public static GameOpenProcedure open(GameOpenContext<DuelsConfig> context) {
         DuelsConfig config = context.getConfig();
-        DuelsMapGenerator generator = new DuelsMapGenerator(config.mapConfig);
-        DuelsMap map = generator.build();
+        DuelsMap map = new DuelsMapBuilder(config.mapConfig).create();
 
         BubbleWorldConfig worldConfig = new BubbleWorldConfig()
                 .setGenerator(map.asGenerator(context.getServer()))
