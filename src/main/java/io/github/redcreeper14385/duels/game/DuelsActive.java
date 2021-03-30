@@ -1,5 +1,6 @@
 package io.github.redcreeper14385.duels.game;
 
+import com.google.common.collect.Multimap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.entity.EquipmentSlot;
@@ -8,6 +9,7 @@ import net.minecraft.util.ActionResult;
 import xyz.nucleoid.plasmid.game.GameCloseReason;
 import xyz.nucleoid.plasmid.game.GameSpace;
 import xyz.nucleoid.plasmid.game.event.*;
+import xyz.nucleoid.plasmid.game.player.GameTeam;
 import xyz.nucleoid.plasmid.game.player.JoinResult;
 import xyz.nucleoid.plasmid.game.player.PlayerSet;
 import xyz.nucleoid.plasmid.game.rule.GameRule;
@@ -33,22 +35,28 @@ public class DuelsActive {
     public final GameSpace gameSpace;
     private final DuelsMap gameMap;
 
-    // TODO replace with ServerPlayerEntity if players are removed upon leaving
+    final DuelsTeams teams;
+
     private final Object2ObjectMap<PlayerRef, DuelsPlayer> participants;
     private final DuelsSpawnLogic spawnLogic;
     private final DuelsStageManager stageManager;
     private final boolean ignoreWinState;
     private final DuelsTimerBar timerBar;
 
-    private DuelsActive(GameSpace gameSpace, DuelsMap map, GlobalWidgets widgets, DuelsConfig config, Set<PlayerRef> participants) {
+    private DuelsActive(GameSpace gameSpace, DuelsMap map, GlobalWidgets widgets, DuelsConfig config, Multimap<GameTeam, ServerPlayerEntity> players) {
         this.gameSpace = gameSpace;
         this.config = config;
         this.gameMap = map;
         this.spawnLogic = new DuelsSpawnLogic(gameSpace, map);
         this.participants = new Object2ObjectOpenHashMap<>();
 
-        for (PlayerRef player : participants) {
-            this.participants.put(player, new DuelsPlayer());
+        this.teams = gameSpace.addResource(new DuelsTeams(gameSpace));
+
+        for (GameTeam team : participants.keySet()) {
+            for (ServerPlayerEntity player : players.get(team)) {
+                this.participants.put(PlayerRef.of(player), new DuelsPlayer(team));
+                this.teams.addPlayer(player, team);
+            }
         }
 
         this.stageManager = new DuelsStageManager();
@@ -56,13 +64,14 @@ public class DuelsActive {
         this.timerBar = new DuelsTimerBar(widgets);
     }
 
-    public static void open(GameSpace gameSpace, DuelsMap map, DuelsConfig config) {
+    public static void open(GameSpace gameSpace, DuelsMap map, DuelsConfig config, Multimap<GameTeam, ServerPlayerEntity> players) {
         gameSpace.openGame(game -> {
-            Set<PlayerRef> participants = gameSpace.getPlayers().stream()
-                    .map(PlayerRef::of)
-                    .collect(Collectors.toSet());
             GlobalWidgets widgets = new GlobalWidgets(game);
-            DuelsActive active = new DuelsActive(gameSpace, map, widgets, config, participants);
+            DuelsActive active = new DuelsActive(gameSpace, map, widgets, config, players);
+
+            for (ServerPlayerEntity i : gameSpace.getPlayers()) {
+                active.addPlayer(i);
+            }
 
             game.setRule(GameRule.CRAFTING, RuleResult.DENY);
             game.setRule(GameRule.PORTALS, RuleResult.DENY);

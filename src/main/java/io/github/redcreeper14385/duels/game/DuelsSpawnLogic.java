@@ -11,6 +11,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.GameMode;
 import io.github.redcreeper14385.duels.Duels;
 import io.github.redcreeper14385.duels.game.map.DuelsMap;
+import xyz.nucleoid.plasmid.game.TeamSelectionLobby;
+import xyz.nucleoid.plasmid.game.player.TeamAllocator;
 import xyz.nucleoid.plasmid.util.BlockBounds;
 
 public class DuelsSpawnLogic {
@@ -39,20 +41,10 @@ public class DuelsSpawnLogic {
     public void spawnPlayer(ServerPlayerEntity player) {
         ServerWorld world = this.gameSpace.getWorld();
 
-        BlockPos pos = this.map.spawn;
-        if (pos == null) {
-            Duels.LOGGER.error("Cannot spawn player! No spawn is defined in the map!");
-            return;
-        }
-
         BlockBounds spawn1 = map.getSpawn1();
         BlockBounds spawn2 = map.getSpawn2();
 
-        float radius = 4.5f;
-        float x = pos.getX() + MathHelper.nextFloat(player.getRandom(), -radius, radius);
-        float z = pos.getZ() + MathHelper.nextFloat(player.getRandom(), -radius, radius);
-
-        if (gameSpace.getPlayerCount() == 0) {
+        if (true) {
             player.teleport(world, spawn1.getMin().getX(), spawn1.getMin().getY(), spawn1.getMin().getZ(), 0, 0);
         }
         else {
