@@ -52,7 +52,7 @@ public class DuelsActive {
 
         this.teams = gameSpace.addResource(new DuelsTeams(gameSpace));
 
-        for (GameTeam team : participants.keySet()) {
+        for (GameTeam team : players.keySet()) {
             for (ServerPlayerEntity player : players.get(team)) {
                 this.participants.put(PlayerRef.of(player), new DuelsPlayer(team));
                 this.teams.addPlayer(player, team);
